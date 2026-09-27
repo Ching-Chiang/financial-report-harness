@@ -1,0 +1,27 @@
+.venv/
+.venv.old-*/
+runs/
+tmp/
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
+*.local.json
+
+# Local inputs, generated results, and distribution archives
+/example/
+/inputs/
+/output/
+/dist/
+*.pdf
+*.zip
+
+# Local editor and operating-system state
+.claude/settings.local.json
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.pem
+*.key

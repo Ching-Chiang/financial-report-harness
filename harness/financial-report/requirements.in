@@ -1,0 +1,5 @@
+requests==2.34.2
+pypdf==6.19.0
+beautifulsoup4==4.15.0
+sqlglot==30.0.3
+jsonschema==4.26.0

@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "source", "business_rules", "records", "unmatched_items"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "source": {
+      "type": "object", "additionalProperties": false,
+      "required": ["pdf_path", "sha256", "page_count", "parse_manifest"],
+      "properties": {
+        "pdf_path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "page_count": {"type": "integer", "minimum": 1},
+        "parse_manifest": {"type": "string", "minLength": 1}
+      }
+    },
+    "business_rules": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "reference", "amount_tolerance"],
+      "properties": {
+        "status": {"enum": ["pending", "confirmed"]},
+        "reference": {"type": "string"},
+        "amount_tolerance": {"type": "string", "pattern": "^\\d+(\\.\\d+)?$"}
+      }
+    },
+    "records": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["table", "scope", "period_label", "metadata", "fields"],
+        "properties": {
+          "table": {"enum": ["AShareBalanceSheet", "AShareIncome", "AShareCashFlow"]},
+          "scope": {"enum": ["consolidated", "parent", "unknown"]},
+          "period_label": {"type": "string", "minLength": 1},
+          "metadata": {"type": "object", "additionalProperties": {"type": ["string", "null"]}},
+          "fields": {
+            "type": "array", "minItems": 1,
+            "items": {
+              "type": "object", "additionalProperties": false,
+              "required": ["field", "raw_label", "raw_value", "source_unit", "pdf_page", "block_id", "confidence", "mapping_status", "mapping_basis", "review_status"],
+              "properties": {
+                "field": {"type": "string", "minLength": 1},
+                "raw_label": {"type": "string", "minLength": 1},
+                "raw_value": {"type": ["string", "null"]},
+                "source_unit": {"enum": ["yuan", "wan_yuan", "yi_yuan", "yuan_per_share", "shares", "wan_shares", "unknown"]},
+                "pdf_page": {"type": "integer", "minimum": 1},
+                "block_id": {"type": "string", "minLength": 1},
+                "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+                "mapping_status": {"enum": ["candidate", "confirmed", "ambiguous"]},
+                "mapping_basis": {"type": "string"},
+                "review_status": {"enum": ["unreviewed", "verified", "needs_review"]}
+              }
+            }
+          }
+        }
+      }
+    },
+    "unmatched_items": {
+      "type": "array", "items": {"type": "object", "required": ["reason"], "properties": {"reason": {"type": "string"}}}
+    }
+  }
+}
